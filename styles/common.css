@@ -1,0 +1,220 @@
+@font-face {
+    font-family: '851H-kktt';
+    src: url('../fonts//851H-kktt_004.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'cc-ultimatum';
+    src: url('../fonts//cc-ultimatum-bold-italic.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'cinecaption';
+    src: url('../fonts//cinecaption226.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'keifont';
+    src: url('../fonts//keifont.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'm6x11plus';
+    src: url('../fonts/m6x11plus.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'cinzel-bold';
+    src: url('../fonts/CinzelDecorative-Bold.ttf') format('truetype');
+}
+
+body {
+    font-family: 'cc-ultimatum', serif;
+    font-size: 16px;
+    color: #000;
+    background-image: url('../images/bg_img.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* 画面高さを確保 */
+    user-select: none;
+}
+
+header {
+    background-color: #323339;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 2rem;
+    font-family: 'cinzel-bold', serif;
+    letter-spacing: 2px;
+}
+
+#timer-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#timer {
+    font-family: '851H-kktt', monospace;
+    font-size: 4rem;
+    color: #000;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 5px 20px;
+    border-radius: 10px;
+}
+
+/* メッセージエリア */
+#message-area {
+    width: 90%;
+    max-width: 500px;
+    margin: 0 auto 15px;
+    padding: 10px;
+    text-align: center;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    font-weight: bold;
+    min-height: 1.5em;
+    font-family: 'cinecaption', sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+.message-default { background-color: #f0f0f0; color: #333; }
+.message-info { background-color: #e3f2fd; color: #0d47a1; }
+.message-error { background-color: #ffebee; color: #c62828; }
+.message-success { background-color: #e8f5e9; color: #2e7d32; }
+
+/* 入力エリア */
+#hit-blow-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#user-input {
+    width: 200px;
+    padding: 10px;
+    font-size: 1.5rem;
+    text-align: center;
+    font-family: 'm6x11plus', monospace;
+    border: 3px solid #333;
+    border-radius: 5px;
+    letter-spacing: 5px;
+}
+
+#submit-button {
+    padding: 0 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'cc-ultimatum', sans-serif;
+    transition: transform 0.1s;
+}
+#submit-button:active {
+    transform: scale(0.95);
+}
+#submit-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 履歴エリア */
+#history-container {
+    width: 90%;
+    max-width: 400px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    border: 2px solid #333;
+    padding: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-family: 'cinecaption', sans-serif;
+}
+
+#history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#history-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 5px;
+    border-bottom: 1px dashed #ccc;
+    font-size: 1.2rem;
+}
+
+.history-guess {
+    font-family: 'm6x11plus', monospace;
+    letter-spacing: 2px;
+}
+
+.res-h { color: #d32f2f; font-weight: bold; }
+.res-b { color: #1976d2; font-weight: bold; }
+
+/* コントロールエリア */
+#controls-container {
+    text-align: center;
+    margin-bottom: 20px;
+    height: 50px; /* ボタンがない時もレイアウトが崩れないように高さを確保 */
+}
+
+/* 共通ボタンスタイル */
+.control-btn {
+    padding: 10px 30px;
+    font-size: 1.2rem;
+    font-family: 'cc-ultimatum', sans-serif;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.control-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* 中止（ギブアップ）ボタン */
+.abort-btn {
+    background-color: #c62828; /* Red */
+    color: white;
+}
+.abort-btn:hover {
+    background-color: #b71c1c;
+}
+
+/* リスタートボタン */
+.restart-btn {
+    background-color: #2e7d32; /* Green */
+    color: white;
+    font-weight: bold;
+    animation: fadeIn 0.5s ease-in-out;
+}
+.restart-btn:hover {
+    background-color: #1b5e20;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

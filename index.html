@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
+    <link rel="shortcut icon" href="favicon/favicon.ico" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/style-loading.css">
+    
+    <title>Riddles Box</title>
+</head>
+<body>
+    <div id="loading">
+        <div class="progress-container">
+          <div class="progress-bar"></div>
+        </div>
+        <p id="progress-text">0%</p>
+    </div>
+    <main>
+        <header>
+            <p>One Shot <span style="color:red">H</span>it & <span style="color:blue">B</span>low</p>
+        </header>
+
+        <!-- タイマー -->
+        <div id="timer-container">
+            <span id="timer">00:00:00.00</span>
+        </div>
+
+        <!-- メッセージエリア -->
+        <div id="message-area" class="message-default">
+            Ready? Enter the first guess.
+        </div>
+
+        <!-- 入力エリア -->
+        <div id="hit-blow-container">
+            <input type="text" id="user-input" maxlength="4" placeholder="4-digit number" 
+            autocomplete="off" inputmode="numeric">
+            <button id="submit-button">Submit</button>
+        </div>
+
+        <!-- コントロールボタンエリア (追加) -->
+        <div id="controls-container">
+            <button id="abort-button" class="control-btn abort-btn" style="display: none;">Give Up</button>
+            <button id="restart-button" class="control-btn restart-btn" style="display: none;">New Game</button>
+        </div>
+
+        <!-- 履歴エリア -->
+        <div id="history-container" class="history-container">
+            <div class="history-header">
+                <span>Guess</span>
+                <span>Result</span>
+            </div>
+            <ul id="history-list">
+                <!-- ここに履歴が追加されます -->
+            </ul>
+        </div>
+    </main>
+
+    <!-- スクリプト読み込み -->
+    <script src="scripts/loading.js"></script>
+    <script src="scripts/timer.js"></script>
+    <script src="scripts/hit_blow.js"></script>
+</body>
+</html>
