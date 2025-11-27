@@ -14,11 +14,6 @@
 }
 
 @font-face {
-    font-family: 'keifont';
-    src: url('../fonts//keifont.ttf') format('truetype');
-}
-
-@font-face {
     font-family: 'm6x11plus';
     src: url('../fonts/m6x11plus.ttf') format('truetype');
 }
@@ -118,7 +113,8 @@ header {
 #submit-button:active {
     transform: scale(0.95);
 }
-#submit-button:disabled {
+#submit-button:disabled,
+#submit-button.btn-disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
@@ -217,4 +213,13 @@ header {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+    20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+.shake {
+    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
 }
