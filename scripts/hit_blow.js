@@ -1,11 +1,11 @@
 // 設定定数
 const NUM_DIGITS = 4;
-const AUTORESET_DELAY = 1500; // 失敗時のリセット待ち時間(ms)
+const AUTORESET_DELAY = 1250; // 失敗時のリセット待ち時間(ms)
 
 // ゲーム状態変数
 let secretNumber = [];
 let isTimerStarted = false; // タイマーが既に動いているか
-let isGameLocked = false;   // 判定中・リセット待ち中に操作をブロックするフラグ
+let isGameLocked = false; // 判定中・リセット待ち中に操作をブロックするフラグ
 let autoResetTimeout = null; // 自動リセットのタイマーID保持用
 
 // DOM要素
@@ -13,8 +13,8 @@ let messageArea;
 let inputElement;
 let submitButton;
 let historyList;
-let abortButton;   // 追加
-let restartButton; // 追加
+let abortButton;
+let restartButton;
 
 window.addEventListener('load', function() {
     // 要素の取得
@@ -22,7 +22,7 @@ window.addEventListener('load', function() {
     inputElement = document.getElementById('user-input');
     submitButton = document.getElementById('submit-button');
     historyList = document.getElementById('history-list');
-    abortButton = document.getElementById('abort-button');     // 追加
+    abortButton = document.getElementById('abort-button'); // 追加
     restartButton = document.getElementById('restart-button'); // 追加
 
     // 入力制限 (数字のみ)
@@ -39,7 +39,7 @@ window.addEventListener('load', function() {
 
     // ボタンイベントリスナー
     submitButton.addEventListener('click', handleSubmit);
-    abortButton.addEventListener('click', abortGame);       // 追加
+    abortButton.addEventListener('click', abortGame); // 追加
     restartButton.addEventListener('click', fullResetGame); // 追加
 
     // ゲーム初期化（最初はタイマーを動かさない）
@@ -50,7 +50,7 @@ window.addEventListener('load', function() {
 function generateSecretNumber() {
     const digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     // シャッフル
-    for (let i = digits.length - 1; i > 0; i--) {
+    for (let i=digits.length-1;i>0;i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [digits[i], digits[j]] = [digits[j], digits[i]];
     }
@@ -65,21 +65,22 @@ function generateSecretNumber() {
 function initGame() {
     generateSecretNumber();
     inputElement.value = '';
-    historyList.innerHTML = ''; // 一発勝負なので履歴はクリア
+    historyList.innerHTML = ''; 
     
     isGameLocked = false;
-    submitButton.disabled = false;
+    
+    submitButton.classList.remove('btn-disabled');
+    // inputはdisabledプロパティのままでOK
     inputElement.disabled = false;
     inputElement.focus();
     
-    // UI状態の更新
     if (isTimerStarted) {
         updateMessage("Next Game Start! Guess again.", "message-info");
-        abortButton.style.display = 'inline-block'; // 継続中なら表示
+        abortButton.style.display = 'inline-block';
         restartButton.style.display = 'none';
     } else {
         updateMessage("Enter 4 digits to start timer.", "message-default");
-        abortButton.style.display = 'none';   // まだ始まっていないので隠す
+        abortButton.style.display = 'none';
         restartButton.style.display = 'none';
     }
 }
@@ -109,24 +110,25 @@ function fullResetGame() {
 function abortGame() {
     if (!isTimerStarted || isGameLocked) return;
 
-    window.GameTimer.stop(); // タイマー停止
-    isGameLocked = true;     // 操作ロック
+    window.GameTimer.stop();
+    isGameLocked = true;
 
     const secretStr = secretNumber.join('');
     updateMessage(`GIVE UP... Answer was ${secretStr}`, 'message-error');
 
-    // UI更新
-    submitButton.disabled = true;
+    // クラスを追加して見た目を無効化
+    submitButton.classList.add('btn-disabled');
+    
     inputElement.disabled = true;
     abortButton.style.display = 'none';
-    restartButton.style.display = 'inline-block'; // リスタートボタン表示
+    restartButton.style.display = 'inline-block';
 }
 
 // 判定ロジック
 function checkGuess(guessArray, secretArray) {
     let hit = 0;
     let blow = 0;
-    for (let i = 0; i < NUM_DIGITS; i++) {
+    for (let i=0;i<NUM_DIGITS; i++) {
         const guessDigit = guessArray[i];
         const secretIndex = secretArray.indexOf(guessDigit);
         if (secretIndex === i) {
@@ -158,62 +160,74 @@ function addHistory(guess, hit, blow) {
 
 // 送信処理
 function handleSubmit() {
-    if (isGameLocked) return;
+    // ゲームロック中にボタンが押されたら揺らす
+    if (isGameLocked) {
+        // 連打対応：クラスを一旦外して強制的に再描画させる
+        submitButton.classList.remove('shake');
+        void submitButton.offsetWidth; // リフロー（再描画）の強制
+        submitButton.classList.add('shake');
+        
+        // アニメーションが終わる頃にクラスを外す
+        setTimeout(() => {
+            submitButton.classList.remove('shake');
+        }, 400);
+        return;
+    }
 
     const guessValue = inputElement.value;
 
     // 1. バリデーション
     if (!/^\d{4}$/.test(guessValue)) {
         updateMessage('Please enter 4 digits.', 'message-error');
+        // エラー時も揺らすと分かりやすいので追加
+        submitButton.classList.remove('shake');
+        void submitButton.offsetWidth;
+        submitButton.classList.add('shake');
         return;
     }
     const guessDigits = guessValue.split('').map(Number);
     const uniqueDigits = new Set(guessDigits);
     if (uniqueDigits.size !== NUM_DIGITS) {
         updateMessage('Digits must be unique.', 'message-error');
+        // エラー時も揺らす
+        submitButton.classList.remove('shake');
+        void submitButton.offsetWidth;
+        submitButton.classList.add('shake');
         return;
     }
 
-    // 2. タイマー開始（まだ動いていなければ）
+    // 2. タイマー開始
     if (!isTimerStarted) {
         window.GameTimer.start();
         isTimerStarted = true;
-        abortButton.style.display = 'inline-block'; // タイマー開始時に中止ボタン表示
+        abortButton.style.display = 'inline-block';
     }
 
     const secretDigits = secretNumber.map(Number);
     const { hit, blow } = checkGuess(guessDigits, secretDigits);
     const secretStr = secretNumber.join('');
 
-    // 履歴追加
     addHistory(guessValue, hit, blow);
 
     // 3. 結果判定
     if (hit === NUM_DIGITS) {
-        // --- 正解 (Victory) ---
+        // --- 正解 ---
         window.GameTimer.stop();
         isGameLocked = true;
-        
         updateMessage(`CONGRATULATIONS! Answer: ${secretStr}`, 'message-success');
         
-        submitButton.disabled = true;
-        inputElement.disabled = true;
+        // クラスで無効化
+        submitButton.classList.add('btn-disabled');
         
-        // ボタン切り替え
+        inputElement.disabled = true;
         abortButton.style.display = 'none';
         restartButton.style.display = 'inline-block';
 
     } else {
-        // --- 不正解 (One Shot Fail) ---
+        // --- 不正解 ---
         isGameLocked = true;
         updateMessage(`MISS! Answer was ${secretStr}. Resetting...`, 'message-error');
         
-        // ボタン操作も一時的に無効化したい場合はここで制御可能だが、
-        // 仕様上「中止」はいつでも押せるべきならそのままにする
-        // ここでは「リセット待ち」の間は操作できないようにボタンも隠すか、
-        // あるいは放置（タイマーは動いているので）
-
-        // 自動リセット設定
         autoResetTimeout = setTimeout(() => {
             initGame();
         }, AUTORESET_DELAY);
